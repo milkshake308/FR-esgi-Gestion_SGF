@@ -32,9 +32,13 @@ def deplacer(source, destination):
 
 
 def supprimer(chemin_repetoire):
-    if os.path.isdir(chemin_repetoire):
-        shutil.rmtree(chemin_repetoire)
+    confirmation = input(f"Voulez-vous vraiment supprimer {chemin_repetoire}? (Y/N): ")
+    if confirmation.lower() == "y":
+        if os.path.isdir(chemin_repetoire):
+            shutil.rmtree(chemin_repetoire)
+        else:
+            os.remove(chemin_repetoire)
+        print(f"{chemin_repetoire} a été supprimé.")
     else:
-        os.remove(chemin_repetoire)
-
+        print("Suppression annulée.")
 
