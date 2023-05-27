@@ -23,7 +23,7 @@ def lister_contenu_dossier(chemin):
         groupe = infos_fichier.st_gid
         taille = convertir_taille(infos_fichier.st_size)
         date_modif = datetime.fromtimestamp(infos_fichier.st_mtime)
-        nom_parent = os.path.basename(chemin)
+        nom_parent = os.path.realpath(chemin)
         if os.path.isfile(chemin_absolu):
             tableau.add_row(["FILE", permissions, owner, groupe, taille, date_modif, nom, nom_parent])
         elif os.path.isdir(chemin_absolu):
@@ -32,3 +32,26 @@ def lister_contenu_dossier(chemin):
             tableau.add_row(["SPECIAL", permissions, owner, groupe, taille, date_modif, nom, nom_parent])
 
     return tableau
+
+
+def audit_tree(root_dir):
+
+    tableau = PrettyTable()
+    tableau.field_names = ["TYPE", "MASK", "UID", "GID", "SIZE", "LAST EDIT", "FILENAME", "PARENT DIRECTORY"]
+    def recursion(tableau, root_dir):
+        for nom in os.listdir(root_dir):
+            chemin = os.path.join(root_dir, nom)
+            if os.path.isdir(chemin):
+                tableau.add_rows(lister_contenu_dossier(chemin).rows)
+                recursion(tableau, chemin)
+        return tableau
+
+    recursion(tableau, root_dir)
+    return tableau
+
+
+
+# Fonction qui prend un tableau et le transforme en CSV à l'endroit indiqué
+def table_to_csv(tableau, fichier_destination_csv):
+    with open(fichier_destination_csv, 'w', newline='') as fichier_csv:
+        fichier_csv.write(tableau.get_csv_string())
