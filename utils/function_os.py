@@ -55,3 +55,18 @@ def audit_tree(root_dir):
 def table_to_csv(tableau, fichier_destination_csv):
     with open(fichier_destination_csv, 'w', newline='') as fichier_csv:
         fichier_csv.write(tableau.get_csv_string())
+
+
+
+def audit_complet(repertoire_base, repertoire_dest):
+    tableaux = []
+    for nom_region in os.listdir(repertoire_base):
+        chemin_region = os.path.join(repertoire_base, nom_region)
+        if os.path.isdir(chemin_region):
+            for nom_client in os.listdir(chemin_region):
+                chemin_client = os.path.join(chemin_region, nom_client)
+                if os.path.isdir(chemin_client):
+                    table_to_csv(
+                    tableau= audit_tree(chemin_client), 
+                    fichier_destination_csv=repertoire_dest+nom_region+'_'+nom_client+'.csv'
+                    )
