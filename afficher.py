@@ -1,4 +1,4 @@
-from function_os import *
+from utils.function_os import *
 import sys
 
 if len(sys.argv) < 2:
